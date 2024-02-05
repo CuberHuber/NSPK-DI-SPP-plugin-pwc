@@ -4,18 +4,16 @@
 1/2 документ плагина
 """
 import datetime
-import itertools
 import logging
-import os
 import re
 import time
 
 import dateutil.parser
+from selenium.common import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.ui import WebDriverWait, Select
-from selenium.common import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 
 from src.spp.types import SPP_document
 
@@ -37,7 +35,7 @@ class PriceWaterhouseCooprs:
 
     HOST = 'https://www.pwc.com'
 
-    def __init__(self, webdriver: WebDriver, *args, **kwargs):
+    def __init__(self, webdriver: WebDriver, max_count_documents: int = 50, *args, **kwargs):
         """
         Конструктор класса парсера
 
@@ -48,6 +46,7 @@ class PriceWaterhouseCooprs:
         self._content_document = []
 
         self.driver = webdriver
+        self.max_count_documents = max_count_documents
 
         # Логер должен подключаться так. Вся настройка лежит на платформе
         self.logger = logging.getLogger(self.__class__.__name__)
@@ -86,22 +85,13 @@ class PriceWaterhouseCooprs:
 
         docs = []
         docs.extend(self._collect_links_from_publications_page(markets_link))
-        # docs.extend(self._collect_links_from_publications_page(industries_link))
+        docs.extend(self._collect_links_from_publications_page(industries_link))
         # docs.extend(self._collect_links_from_publications_page(research_link))
 
         for doc in docs:
             self._parse_publication(doc)
-
-
-
-
-
-        # Логирование найденного документа
-        # self.logger.info(self._find_document_text_for_logger(document))
-
         # ---
         # ========================================
-        ...
 
     def _collect_links_from_publications_page(self, url: str):
         self._initial_access_source(url)
@@ -119,7 +109,7 @@ class PriceWaterhouseCooprs:
         # !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         # ВОТ ТУТ НУЖНО ВСТАВИТЬ ДОКАЧКУ ФАЙЛОВ ПРИ ПОМОЩИ КНОКИ MORE.
         # ............................................................
-        # сейчас статьие не докачиваются...
+        # Сейчас статьи не докачиваются...
         time.sleep(6)
         articles = self.driver.find_elements(By.CLASS_NAME, 'collection__item-link')
         print(len(articles))
@@ -127,7 +117,12 @@ class PriceWaterhouseCooprs:
 
         # for article in articles:
         # !!!!!!!!!!!!!!! УБРАТЬ
-        for article in articles[:20]:
+        for index, article in enumerate(articles):
+            # Ограничение парсинга до установленного параметра self.max_count_documents
+            if index >= self.max_count_documents:
+                self.logger.debug(f'Max count articles reached ({self.max_count_documents})')
+                break
+
             try:
                 href = article.get_attribute('href')
                 date = article.find_element(By.TAG_NAME, 'time').text

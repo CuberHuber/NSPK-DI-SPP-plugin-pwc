@@ -18,7 +18,7 @@ def driver():
     options = webdriver.ChromeOptions()
 
     # Параметр для того, чтобы браузер не открывался.
-    # options.add_argument('headless')
+    options.add_argument('headless')
 
     options.add_argument('window-size=1920x1080')
     options.add_argument("disable-gpu")
@@ -33,9 +33,9 @@ def to_dict(doc: SPP_document) -> dict:
         'text': doc.text,
         'web_link': doc.web_link,
         'local_link': doc.local_link,
-        'other_data': doc.other_data.get('category') if doc.other_data.get('category') else '',
+        'other_data': '',
         'pub_date': str(doc.pub_date.timestamp()) if doc.pub_date else '',
-        'load_date': str(datetime.datetime.now().timestamp()),
+        'load_date': str(doc.load_date.timestamp()) if doc.load_date else '',
     }
 
 
