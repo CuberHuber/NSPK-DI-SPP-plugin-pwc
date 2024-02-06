@@ -2,7 +2,7 @@ import datetime
 
 from selenium import webdriver
 from logging import config
-from price_waterhouse_cooprs import PriceWaterhouseCooprs
+from pwc import PriceWaterhouseCooprs
 import pickle
 import pandas
 
