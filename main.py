@@ -1,8 +1,10 @@
 import datetime
+import io
 
 from selenium import webdriver
 from logging import config
 from pwc import PriceWaterhouseCooprs
+import pwc_test
 import pickle
 import pandas
 
@@ -38,20 +40,24 @@ def to_dict(doc: SPP_document) -> dict:
         'load_date': str(doc.load_date.timestamp()) if doc.load_date else '',
     }
 
+def dump():
+    with open('backup/documents.backup.pkl', 'rb') as file:
+        return io.BytesIO(file.read())
 
-parser = PriceWaterhouseCooprs(driver())
+
+parser = pwc_test.PriceWaterhouseCooprs(dump())
 docs: list[SPP_document] = parser.content()
-
-try:
-    with open('backup/documents.backup.pkl', 'wb') as file:
-        pickle.dump(docs, file)
-except Exception as e:
-    print(e)
-
-try:
-    dataframe = pandas.DataFrame.from_records([to_dict(d) for d in docs])
-    dataframe.to_csv('out/documents.csv')
-except Exception as e:
-    print(e)
+#
+# try:
+#     with open('backup/documents.backup.pkl', 'wb') as file:
+#         pickle.dump(docs, file)
+# except Exception as e:
+#     print(e)
+#
+# try:
+#     dataframe = pandas.DataFrame.from_records([to_dict(d) for d in docs])
+#     dataframe.to_csv('out/documents.csv')
+# except Exception as e:
+#     print(e)
 
 print(*docs, sep='\n\r\n')

@@ -17,7 +17,8 @@ TYPE PARSER
 # Если в плагине есть нагрузка (модель или парсер), то нужно указать и их.
 # TYPE {filename}   # *раскомментировать
 FILE SPPfile
-FILE pwc.py
+FILE pwc_test.py
+FILE backup/documents.backup.pkl
 
 
 ## ****************************************************
@@ -42,7 +43,8 @@ PAYLOAD pwc    # *раскомментировать
 #       keyword - название, по которому будет передаваться объект (key)
 #       module - название модуля, который будет загружен
 # INIT {keyword} {module}
-INIT webdriver MODULE(WebDriver)
+# INIT webdriver MODULE(WebDriver)
+INIT dump FILE(backup/documents.backup.pkl)
 
 # Инструкция ENTRY устанавоивает точку входа. Это имя класса и метода, которые должна запустить платформа.
 #       {entry method} по умолчанию - content
