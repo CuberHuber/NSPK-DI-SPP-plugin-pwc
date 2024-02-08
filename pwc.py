@@ -35,7 +35,7 @@ class PriceWaterhouseCooprs:
 
     HOST = 'https://www.pwc.com'
 
-    def __init__(self, webdriver: WebDriver, max_count_documents: int = 10, *args, **kwargs):
+    def __init__(self, webdriver: WebDriver, max_count_documents: int = 100, *args, **kwargs):
         """
         Конструктор класса парсера
 
