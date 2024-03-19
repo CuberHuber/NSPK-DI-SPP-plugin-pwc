@@ -10,7 +10,6 @@ import time
 
 import dateutil.parser
 from selenium.common import NoSuchElementException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
