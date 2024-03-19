@@ -4,7 +4,6 @@ import io
 from selenium import webdriver
 from logging import config
 from pwc import PriceWaterhouseCooprs
-import pwc_test
 import pickle
 import pandas
 
@@ -44,8 +43,9 @@ def dump():
     with open('backup/documents.backup.pkl', 'rb') as file:
         return io.BytesIO(file.read())
 
+doc = SPP_document(doc_id=None, title='Valley Forge Fabrics: Weaving in cloud-based efficiency from quote to install', abstract='What is cloud operational efficiency? For VFF, it’s a Microsoft solution that streamlines operations, improves customer experiences and supports growth.', text=None, web_link='https://www.pwc.com/gx/en/ghost/valley-forge-fabrics-cloud-efficiency.html', local_link=None, other_data=None, pub_date=datetime.datetime(2023, 11, 15, 0, 0), load_date=datetime.datetime(2024, 3, 19, 13, 53, 25, 455015))
 
-parser = pwc_test.PriceWaterhouseCooprs(dump())
+parser = PriceWaterhouseCooprs(driver(), 5, doc)
 docs: list[SPP_document] = parser.content()
 #
 # try:
